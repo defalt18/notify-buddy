@@ -1,9 +1,11 @@
 import express from 'express'
 import bodyParser from 'body-parser'
-import logger from '../utils/logger.js'
-import ROUTES from '../constants/routes.js'
 import path from 'path'
 import dotenv from 'dotenv'
+
+import logger from '../utils/logger.js'
+import ROUTES from '../constants/routes.js'
+
 export default class Initializer {
 	constructor() {
 		dotenv.config()
@@ -16,6 +18,7 @@ export default class Initializer {
 		this.app.use(bodyParser.urlencoded({ extended: true }))
 		this.app.set('views', path.resolve() + '/app/views')
 		this.app.set('view engine', 'pug')
+		this.app.use(express.static(path.join(path.resolve(), '/client')))
 	}
 
 	_registerRoutes() {
