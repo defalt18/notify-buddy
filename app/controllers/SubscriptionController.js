@@ -1,9 +1,7 @@
 import PushNotificationSender from '../classes/PushNotificationSender.js'
-import logger from '../utils/logger.js'
 
-export default async function SubscriptionController(req, res) {
-	logger.log('info', 'reached here....')
+export default async function SubscriptionController(request, response) {
 	const sender = new PushNotificationSender()
-	await sender._send()
-	res.status(201)
+	await sender._send(request)
+	response.status(201)
 }

@@ -1,0 +1,46 @@
+head
+  meta(charset='UTF-8')
+  meta(http-equiv='X-UA-Compatible' content='IE=edge')
+  meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  title Managing push notifications
+h1 Push Notification Using Web-Push
+button(onclick='subscribeToWorker()') Click to receive push notification
+span#worker-stat
+script.
+  async function registerServiceWorker() {
+  await navigator.serviceWorker.register("worker.js", {
+  scope: "/",
+  });
+  const registration = await navigator.serviceWorker.getRegistration("/");
+  return await registration
+  }
+  async function subscribeToWorker() {
+  if ("serviceWorker" in navigator) {
+  let registration = await navigator.serviceWorker.getRegistration("/");
+  const isRegistered = registration !== undefined
+  if (!isRegistered) {
+  document.querySelector('#worker-stat').innerHTML = ' loading...'
+  registration = await registerServiceWorker()
+  }
+  if ((await registration).active) {
+  document.querySelector('#worker-stat').innerHTML = ' triggered!'
+  const subscription = await registration.pushManager
+  .subscribe({
+  userVisibleOnly: true,
+  applicationServerKey: "#{PUBLIC_KEY}",
+  })
+  .catch((err) =>
+  console.log("[ERROR]: Error subscribing to worker", err)
+  );
+  if (subscription !== null)
+  fetch("/subscribe", {
+  method: "POST",
+  body: JSON.stringify(subscription),
+  headers: {
+  "Content-Type": "application/json",
+  },
+  });
+  else throw new Error("Couldn't subscribe to service worker");
+  } else throw new Error("Service worker is not registered or active")
+  }
+  }

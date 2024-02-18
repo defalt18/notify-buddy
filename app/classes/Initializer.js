@@ -18,7 +18,7 @@ export default class Initializer {
 		this.app.use(bodyParser.urlencoded({ extended: true }))
 		this.app.set('views', path.resolve() + '/app/views')
 		this.app.set('view engine', 'pug')
-		this.app.use(express.static(path.join(path.resolve(), '/client')))
+		this.app.use(express.static(path.resolve() + '/app/service-workers'))
 	}
 
 	_registerRoutes() {

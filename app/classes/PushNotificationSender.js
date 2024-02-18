@@ -22,7 +22,7 @@ export default class PushNotificationSender extends NotificationSender {
 
 	async _send(request) {
 		const { body: subscription } = request
-		this.connect()
+		this._connect()
 		const payload = this._preparePayload()
 		await this.pushService.sendNotification(subscription, payload)
 	}

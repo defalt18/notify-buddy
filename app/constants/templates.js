@@ -1,5 +1,5 @@
 export const PushWebNotificationTemplate = {
-	title: 'Push notification by notify-buddy',
+	title: 'Hi there! - notify-buddy ;)',
 	body: 'This notification was sent by notify-buddy',
 }
 
