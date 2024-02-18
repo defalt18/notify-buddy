@@ -1,12 +1,32 @@
 head
   meta(charset='UTF-8')
-  meta(http-equiv='X-UA-Compatible' content='IE=edge')
-  meta(name='viewport' content='width=device-width, initial-scale=1.0')
-  link(rel='stylesheet' href='https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css')
+  meta(http-equiv='X-UA-Compatible', content='IE=edge')
+  meta(name='viewport', content='width=device-width, initial-scale=1.0')
+  link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/@picocss/pico@2.0.3/css/pico.classless.min.css')
   title Managing push notifications
-h1 Push Notification Using Web-Push
-button(onclick='subscribeToWorker()') Click to receive push notification
-span#worker-stat
+header
+  hgroup
+    h1 Notification Manager
+    p Manage and play with all the notifications in one place
+main
+  // Sections
+  section#push-notifs
+    article
+      h2 Push Notifications
+      p
+        | Push notifications are a type of user engagement where the users get notified about ads using a popup which originates through a website
+      button(onclick='subscribeToWorker()') Click to receive a push notification
+  br
+  br
+  br
+  section#emails
+    article
+      h2 Email Notifications
+      p
+        | Email notifications are those types where the users receive mails regarding advertisements related to a product.
+      form
+        input#email(type='text', name='email', placeholder='john@daow.com', aria-label='email', required='true')
+      button(type='submit', onclick='sendEmailNotification()') Click to receive an email on your email id
 script.
   async function registerServiceWorker() {
   await navigator.serviceWorker.register("worker.js", {
@@ -20,21 +40,14 @@ script.
   let registration = await navigator.serviceWorker.getRegistration("/");
   const isRegistered = registration !== undefined
   if (!isRegistered) {
-  document.querySelector('#worker-stat').innerHTML = ' loading...'
   registration = await registerServiceWorker()
   }
   if ((await registration).active) {
-  document.querySelector('#worker-stat').innerHTML = ' triggered!'
-  const subscription = await registration.pushManager
-  .subscribe({
+  const subscription = await registration.pushManager.subscribe({
   userVisibleOnly: true,
-  applicationServerKey: "#{PUBLIC_KEY}",
-  })
-  .catch((err) =>
-  console.log("[ERROR]: Error subscribing to worker", err)
-  );
-  if (subscription !== null)
-  fetch("/subscribe", {
+  applicationServerKey: "",
+  }).catch((err) => console.log("[ERROR]: Error subscribing to worker", err));
+  if (subscription !== null) await fetch("/subscribe", {
   method: "POST",
   body: JSON.stringify(subscription),
   headers: {
@@ -43,5 +56,19 @@ script.
   });
   else throw new Error("Couldn't subscribe to service worker");
   } else throw new Error("Service worker is not registered or active")
+  }
+  }
+  async function sendEmailNotification() {
+  const email = document.querySelector('#email').value;
+  if (email !== "") {
+  await fetch("/subscribe?mail=true", {
+  method: "POST",
+  body: JSON.stringify({
+  recipient_mail: email
+  }),
+  headers: {
+  "Content-Type": "application/json",
+  }
+  })
   }
   }
