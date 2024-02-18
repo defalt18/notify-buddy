@@ -1,7 +1,18 @@
 doctype html
-html
-    head
-        title Server Running
-    body
-        h1 This server is available at #{port}
-        a(href='/manage-notifications') Go to manage notifications
+head
+  title Server Running
+  link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/@picocss/pico@2.0.3/css/pico.classless.min.css')
+header
+  hgroup
+    h1 Welcome to notify-buddy
+    p An all channel notification system.
+main
+  article#article
+    p
+      | An all channel notification service. Currently supports email and push notification. To manage notifications, click the "Go to manage notifications" below
+    footer
+      small
+        | Server is live at port :
+        ins #{port}
+  br
+  a(href='/manage-notifications') Go to manage notifications

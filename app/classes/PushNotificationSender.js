@@ -1,6 +1,7 @@
 import NotificationSender from './NotificationSender.js'
 import webpush from 'web-push'
 import { PushWebNotificationTemplate } from '../constants/templates.js'
+import getSecretKey from '../secrets/secrets.js'
 export default class PushNotificationSender extends NotificationSender {
 	constructor() {
 		super()
@@ -10,9 +11,9 @@ export default class PushNotificationSender extends NotificationSender {
 
 	_connect() {
 		this.pushService.setVapidDetails(
-			process.env.WB_MAIL,
-			process.env.WB_PUBLIC_KEY,
-			process.env.WB_PRIVATE_KEY
+			getSecretKey('WB_MAIL'),
+			getSecretKey('WB_PUBLIC_KEY'),
+			getSecretKey('WB_PRIVATE_KEY')
 		)
 	}
 
