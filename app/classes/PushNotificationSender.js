@@ -17,6 +17,10 @@ export default class PushNotificationSender extends NotificationSender {
 		)
 	}
 
+	_getInstance() {
+		return this
+	}
+
 	_preparePayload() {
 		return JSON.stringify(this.template)
 	}

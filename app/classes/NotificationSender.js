@@ -17,4 +17,8 @@ export default class NotificationSender {
 	async _send() {
 		throw new Error("Method '_send()' must be implemented.")
 	}
+
+	_getInstance() {
+		return this
+	}
 }

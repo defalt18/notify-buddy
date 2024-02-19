@@ -14,6 +14,10 @@ export default class MailNotificationSender extends NotificationSender {
 		}
 	}
 
+	_getInstance() {
+		return this
+	}
+
 	async _connect(params) {
 		this.recipient_email = _get(params, 'body.recipient_mail')
 		this.service = new this.provider({
