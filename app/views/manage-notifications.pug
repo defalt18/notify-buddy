@@ -56,7 +56,7 @@ script.
   userVisibleOnly: true,
   applicationServerKey: "#{PUBLIC_KEY}",
   }).catch((err) => console.log("[ERROR]: Error subscribing to worker", err));
-  if (subscription !== null) await fetch("/subscribe", {
+  if (subscription !== null) await fetch("/subscribe?push=true", {
   method: "POST",
   body: JSON.stringify(subscription),
   headers: {

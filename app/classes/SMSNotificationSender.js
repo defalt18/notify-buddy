@@ -10,6 +10,10 @@ export default class SMSNotificationSender extends NotificationSender {
 		this.provider = twilio
 	}
 
+	_getInstance() {
+		return this
+	}
+
 	async _connect(params) {
 		this.recipient_phone = _get(params, 'body.recipient_phone')
 		this.service = this.provider(

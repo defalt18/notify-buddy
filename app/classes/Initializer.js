@@ -5,12 +5,13 @@ import dotenv from 'dotenv'
 
 import logger from '../utils/logger.js'
 import ROUTES from '../constants/routes.js'
+import getSecretKey from '../secrets/secrets.js'
 
 export default class Initializer {
 	constructor() {
 		dotenv.config()
 		this.app = express()
-		this.port = process.env.PORT
+		this.port = getSecretKey('PORT')
 	}
 
 	_initializeAppConfig() {
