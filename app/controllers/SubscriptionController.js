@@ -11,11 +11,14 @@ const SENDER_SERVICE_MAP = {
 	push: PushNotificationSender,
 }
 function getSendService(request) {
+	let Service
 	const requestedServiceType = _head(_keys(request.query))
-	return new SENDER_SERVICE_MAP[requestedServiceType]()
+	return (Service = new SENDER_SERVICE_MAP[requestedServiceType]())
 }
 export default async function SubscriptionController(request, response) {
 	const service = getSendService(request)._getInstance()
-	const { meta } = await executeAsyncSafeStatement(service, request)
+	const { meta } = await executeAsyncSafeStatement(service, request, {
+		execute: '_send',
+	})
 	return response.status(meta.status).send(meta)
 }
