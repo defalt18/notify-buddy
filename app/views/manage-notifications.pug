@@ -18,7 +18,6 @@ main
       button(onclick='subscribeToWorker()') Click to receive a push notification
   br
   br
-  br
   section#emails
     article
       h2 Email Notifications
@@ -26,7 +25,17 @@ main
         | Email notifications are those types where the users receive mails regarding advertisements related to a product.
       form
         input#email(type='text', name='email', placeholder='john@daow.com', aria-label='email', required='true')
-      button(type='submit', onclick='sendEmailNotification()') Click to receive an email on your email id
+      button(onclick='sendEmailNotification()') Click to receive an email on your email id
+  br
+  br
+  section#sms
+      article
+        h2 SMS Notifications
+        p
+          | SMS notifications are those types where the users receive text messages regarding advertisements related to a product.
+        form
+          input#phone(type='phone', name='phone', placeholder='+12085796974', aria-label='phone', required='true')
+        button(onclick='sendSmsNotification()') Click to receive an SMS on your phone number
 script.
   async function registerServiceWorker() {
   await navigator.serviceWorker.register("worker.js", {
@@ -45,7 +54,7 @@ script.
   if ((await registration).active) {
   const subscription = await registration.pushManager.subscribe({
   userVisibleOnly: true,
-  applicationServerKey: "",
+  applicationServerKey: "#{PUBLIC_KEY}",
   }).catch((err) => console.log("[ERROR]: Error subscribing to worker", err));
   if (subscription !== null) await fetch("/subscribe", {
   method: "POST",
@@ -72,3 +81,19 @@ script.
   })
   }
   }
+  async function sendSmsNotification() {
+  const phone = document.querySelector('#phone').value;
+  if (phone !== "") {
+  await fetch("/subscribe?sms=true", {
+  method: "POST",
+  headers: {
+  "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    recipient_phone: "+" + phone.toString()
+  })
+  })
+  }
+  }
+
+

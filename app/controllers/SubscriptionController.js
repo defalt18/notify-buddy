@@ -1,20 +1,26 @@
 import PushNotificationSender from '../classes/PushNotificationSender.js'
 import MailNotificationSender from '../classes/MailNotificationSender.js'
-import _get from 'lodash/get.js'
+import _has from 'lodash/has.js'
+import _isNull from 'lodash/isNull.js'
 import logger from '../utils/logger.js'
+import SMSNotificationSender from '../classes/SMSNotificationSender.js'
 
+const SENDER_MAP = {
+	mail: MailNotificationSender,
+	sms: SMSNotificationSender,
+}
 function configureSendService(request) {
-	const isMail = _get(request, 'query.mail')
-	return isMail ? MailNotificationSender : PushNotificationSender
+	const Service = SENDER_MAP[_has(request, 'query.mail') ? 'mail' : 'sms']
+	return _isNull(Service) ? PushNotificationSender : Service
 }
 export default async function SubscriptionController(request, response) {
 	const Service = configureSendService(request)
-	const sender = new Service()
+	const service = new Service()
 	try {
-		await sender._send(request)
+		await service._send(request)
 	} catch (err) {
 		logger.log('error', err.toString())
-		response.send('Service not available').status(500)
+		return response.status(500).send({ error: 'Service not available' })
 	}
-	response.send('Notification sent!').status(200)
+	return response.status(200).send({ info: 'Notification sent!' })
 }
